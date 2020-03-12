@@ -1,60 +1,45 @@
 #include <stdio.h>
+#include <stdio_ext.h>
 #include "./lib/bs-tree.h"
-
-typedef struct {
-  int key;
-} Int;
-
-char *__int_to_string(void *arg) {
-  Int data = *(Int*)arg;
-  char *print = (char*) malloc (sizeof(Int) + STRING_MAX);
-  char buffer[BUFFER_SIZE];
-  
-  sprintf(buffer, "%d ", data.key);
-  strcat(print, buffer);
-
-  return print;
-}
-
-int __compare_int(void *arg1, void *arg2) {
-  Int data1, data2;
-  
-  data1 = *(Int*)arg1;
-  data2 = *(Int*)arg2;
-
-  if (data1.key > data2.key) {
-    return 1;
-  } else if (data1.key < data2.key) {
-    return -1;
-  } else {
-    return 0;
-  }
-}
+#include "./lib/aluno.h"
 
 int main() {
   bs_tree_t bst;
   Data data;
-  Int number;
+  aluno_t aluno;
   Node node;
 
   bst_init(&bst);
   createData(&data);
-  setToStringFunction(&data, __int_to_string);
+  setToStringFunction(&data, __to_string);
   
   int op = 1;
 
+  char *nome, *matricula;
+  double nota;
+
   do {
-    printf("(1)Inserir na árvore\n(2)Imprimir Ordem\n(3)Imprimir Pre Ordem\n(4)Imprimir Pos Ordem\n(5)Imprimir em Largura\n(6)Retirar da Árvore\n(0)Sair\n" );
+    printf("(1)Inserir na árvore\n(2)Imprimir Ordem Decrescente\n(3)Imprimir numero de alunos na disciplina\n(4)Imprimir menor nota obtida\n(5)Imprimir maior nota obtida\n(6)Imprimir numero de alunoscom media na primeira prova\n(0)Sair\n" );
     scanf("%d", &op);
 
     switch(op) {
       case 1:
-        printf("Digite um numero: ");
-        scanf("%d", &number.key);
- 
-        setData(&data, &number, sizeof(Int));
+        __fpurge(stdin);
+        printf("Digite o nome: ");
+        fgets(nome, 80, stdin);
+        
+        __fpurge(stdin);
+        printf("Digite a matricula: ");
+        fgets(matricula, 80, stdin);
+        
+        __fpurge(stdin);
+        printf("Digite a nota: ");
+        scanf("%lf", &nota);
+        
+        aluno_init(&aluno, nota, nome, matricula);
+        setData(&data, &aluno, sizeof(aluno_t));
         node_init(&node, &data);
-        bst_insert(&bst.head, &node, __compare_int);
+        bst_insert(&bst.head, &node, __compare_aluno);
         break;
       case 2:
         bst_print(&bst, 2);
@@ -72,16 +57,7 @@ int main() {
         bst_bfs(&(bst.head));
         printf("\n");
         break;
-      case 6:
-        printf("Digite o numero que queira retirar: ");
-        scanf("%d", &number.key);
-        setData(&data, &number, sizeof(Int));
-
-        bst_remove(&(bst.head), &data, __compare_int);
-        bst_bfs(&(bst.head));
-        printf("\n");
-        break;
-      default:
+     default:
         break;
     }
 
