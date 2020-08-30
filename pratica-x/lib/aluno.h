@@ -4,16 +4,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define BUFFER_SIZE 256
-
-typedef struct {
+typedef struct aluno_t {
   double nota;
-  char *nome;
-  char *matricula;
+  char nome[255];
+  char matricula[255];
 } aluno_t;
 
-int __compare_aluno(void*, void*);
-char *__to_string(void*);
+int __compare_aluno(aluno_t* aluno1, aluno_t* aluno2);
+void __to_string_aluno(aluno_t* aluno);
 
 void aluno_init(aluno_t* aluno, double nota, char *nome, char *matricula);
 

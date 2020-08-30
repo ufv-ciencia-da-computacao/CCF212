@@ -1,85 +1,30 @@
 #include "bs-tree.h"
 
-static void __bst_pre_order(Node *node) {  
+static void __bst_pre_order(Node *node, void (*to_string)(Item*)) {  
   if ((*node) == NULL) return;
   
-  Data *key = &((*node)->data);
-  printf("%s", key->toString(getKey(key)));
-  __bst_pre_order(&((*node)->left));
-  __bst_pre_order(&((*node)->right));
+  Item *key = &((*node)->data);
+  (*to_string)(key);
+  __bst_pre_order(&((*node)->left), to_string);
+  __bst_pre_order(&((*node)->right), to_string);
 }
 
-static void __bst_post_order(Node *node) {
+static void __bst_post_order(Node *node, void (*to_string)(Item*)) {
   if ((*node) == NULL) return;
   
-  Data *key = &((*node)->data);
-  __bst_post_order(&((*node)->left));
-  __bst_post_order(&((*node)->right));
-  printf("%s", key->toString(getKey(key)));
+  Item *key = &((*node)->data);
+  __bst_post_order(&((*node)->left), to_string);
+  __bst_post_order(&((*node)->right), to_string);
+  (*to_string)(key);
 }
 
-static void __bst_in_order(Node *node) {
+static void __bst_in_order(Node *node, void (*to_string)(Item*)) {
   if ((*node) == NULL) return;
   
-  Data *key = &((*node)->data);
-  __bst_in_order(&((*node)->left));
-  printf("%s",(key->toString(getKey(key))));
-  __bst_in_order(&((*node)->right));
-}
-
-int node_init(Node *node, Data *data) {
-  (*node) = (Node) malloc(sizeof(struct node_t));
-  (*node)->data = *data;
-  (*node)->left = NULL;
-  (*node)->right = NULL;
-  return 0;
-}
-
-int node_queue_init(Node_queue *node_queue, Node *node_tree) {
-  (*node_queue) = (Node_queue) malloc(sizeof(struct node_queue_t));
-  (*node_queue)->key = *node_tree;
-  (*node_queue)->next = NULL;
-
-  return 0;
-}
-
-int queue_init(Queue *queue) {
-  queue->front = NULL;
-  queue->rear = NULL;
-  return 0;
-}
-
-int queue_empty(Queue *queue) {
-  return (queue->rear == NULL) ? 0 : 1;
-}
-
-int enqueue(Queue *queue, Node_queue *node) {
-
-  if(queue_empty(queue)==0) {
-    queue->front = (*node); 
-    queue->rear = (*node);
-    return 0;
-  }
-
-  queue->rear->next = (*node);
-  queue->rear = (*node);
-  
-  return 0;
-}
-
-Node dequeue(Queue *queue) {
-  if (queue->front == NULL) {
-    return NULL;
-  }
-
-  Node node = queue->front->key;
-  queue->front = queue->front->next;
-
-  if (queue->front == NULL) {
-    queue->rear = NULL;
-  }
-
-  return node;
+  Item *key = &((*node)->data);
+  __bst_in_order(&((*node)->left), to_string);
+  (*to_string)(key);
+  __bst_in_order(&((*node)->right), to_string);
 }
 
 int bst_init(bs_tree_t *tree) {
@@ -87,13 +32,13 @@ int bst_init(bs_tree_t *tree) {
   return 0;
 }
 
-int bst_insert(Node *node, Node *node_insert, int (*compare_data)(void*, void*)) {
+int bst_insert(Node *node, Node *node_insert, int (*compare_data)(Item*, Item*)) {
   if ((*node) == NULL) {
     node_init(node, &((*node_insert)->data));
     return 0;
   } 
  
-  int comparator = (*compare_data)(getKey(&((*node_insert)->data)), getKey(&((*node)->data)));
+  int comparator = (*compare_data)((&((*node_insert)->data)),(&((*node)->data)));
   if(comparator > 0)  { // greater than father node, node_right
     bst_insert(&((*node)->right), node_insert, compare_data);
   } else if (comparator < 0) { // lower than father node, node_left
@@ -120,12 +65,12 @@ void bst_predecessor(Node q, Node *r) {
   free(aux);
 }
 
-Node* bst_search(Node *node, Data key, int (*compare_data)(void*, void*)) {
+Node* bst_search(Node *node, Item key, int (*compare_data)(Item*, Item*)) {
   if((*node) == NULL) {
     return NULL;
   } 
   
-  int comparator = (*compare_data)(getKey(&key), getKey(&((*node)->data)));
+  int comparator = (*compare_data)((&key), (&((*node)->data)));
 
   if(comparator > 0) {
     return bst_search(&((*node)->right), key, compare_data);
@@ -138,7 +83,7 @@ Node* bst_search(Node *node, Data key, int (*compare_data)(void*, void*)) {
   return NULL;
 }
 
-int bst_remove(Node *node, Data *key, int(*compare_data)(void*, void*)) {
+int bst_remove(Node *node, Item *key, int(*compare_data)(Item*, Item*)) {
   if ((*node) == NULL) return -2; // empty tree
 
   Node* node_searched = bst_search(node, *key, compare_data);
@@ -163,16 +108,16 @@ int bst_remove(Node *node, Data *key, int(*compare_data)(void*, void*)) {
   return 0;
 }
 
-int bst_print(bs_tree_t *tree, Order_print_t order_print) {
+int bst_print(bs_tree_t *tree, void (*to_string)(Item*), Order_print_t order_print) {
   switch (order_print) {
     case pre_order:
-      __bst_pre_order(&(tree->head));
+      __bst_pre_order(&(tree->head), to_string);
       break;
     case post_order:
-      __bst_post_order(&(tree->head));
+      __bst_post_order(&(tree->head), to_string);
       break;
     case in_order:
-      __bst_in_order(&(tree->head));
+      __bst_in_order(&(tree->head), to_string);
       break;
     default:
       return -1;
@@ -194,14 +139,14 @@ int bst_height(Node *node) {
   }
 }
 
-void bst_bfs(Node *node) {
+void bst_bfs(Node *node, void (*to_string)(Item*)) {
   Queue queue;
   queue_init(&queue);
   Node aux_node = (*node);
 
   while (aux_node != NULL) {
-    Data *key = &(aux_node->data);
-    printf("%s", key->toString(getKey(key)));
+    Item *key = &(aux_node->data);
+    (*to_string)(key);
    
     if ((aux_node->left) != NULL) {
       Node_queue node_queue;
@@ -219,6 +164,3 @@ void bst_bfs(Node *node) {
     
   }
 }
-
-
-
