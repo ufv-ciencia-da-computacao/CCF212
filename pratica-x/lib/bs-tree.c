@@ -32,17 +32,17 @@ int bst_init(bs_tree_t *tree) {
   return 0;
 }
 
-int bst_insert(Node *node, Node *node_insert, int (*compare_data)(Item*, Item*)) {
+int bst_insert(Node *node, Item item, int (*compare_data)(Item*, Item*)) {
   if ((*node) == NULL) {
-    node_init(node, &((*node_insert)->data));
+    node_init(node, &item);
     return 0;
   } 
  
-  int comparator = (*compare_data)((&((*node_insert)->data)),(&((*node)->data)));
+  int comparator = (*compare_data)(&item, (&((*node)->data)));
   if(comparator > 0)  { // greater than father node, node_right
-    bst_insert(&((*node)->right), node_insert, compare_data);
+    bst_insert(&((*node)->right), item, compare_data);
   } else if (comparator < 0) { // lower than father node, node_left
-    bst_insert(&((*node)->left), node_insert, compare_data);
+    bst_insert(&((*node)->left), item, compare_data);
   } else {
     return 11; //not implemented
   }

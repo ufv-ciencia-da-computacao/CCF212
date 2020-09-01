@@ -13,7 +13,7 @@ typedef struct {
 typedef enum {pre_order, post_order, in_order} Order_print_t;
 
 int bst_init(bs_tree_t *tree);
-int bst_insert(Node *node, Node *node_insert, int (*compare_data)(Item*, Item*));
+int bst_insert(Node *node, Item item, int (*compare_data)(Item*, Item*));
 void bst_predecessor(Node q, Node *r);
 Node* bst_search(Node *node, Item key, int (*compare_data)(Item*, Item*));
 int bst_remove(Node *node, Item *key, int (*compare_data)(Item*, Item*));
