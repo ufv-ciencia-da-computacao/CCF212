@@ -6,12 +6,11 @@
 int main() {
   bs_tree_t bst;
   aluno_t aluno;
-  Node node;
 
   bst_init(&bst);
   
   int op = 1;
-
+  int success;
   char nome[255], matricula[255];
   double nota;
 
@@ -34,20 +33,23 @@ int main() {
         scanf("%lf", &nota);
         
         aluno_init(&aluno, nota, nome, matricula);
-        node_init(&node, &aluno);
         bst_insert(&bst.root, aluno, __compare_aluno);
         break;
       case 2:
+        bst_print(bst, __to_string_aluno, 3);
         printf("\n");
         break;
       case 3:
-        printf("\n");
+        printf("Número de alunos na disciplina: %d\n", count_nodes(bst.root)); 
         break;
       case 4:
-        printf("\n");
+        success = lowest_value(bst.root, &aluno);
+        if (success) __to_string_aluno(aluno);
+
         break;
       case 5:
-        printf("\n");
+        success = greatest_value(bst.root, &aluno);
+        if (success) __to_string_aluno(aluno);
         break;
      default:
         break;

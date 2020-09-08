@@ -27,6 +27,15 @@ static void __bst_in_order(Node node, void (*to_string)(Item)) {
   __bst_in_order(node->right, to_string);
 }
 
+static void __bst_decreasing_order(Node node, void (*to_string)(Item)) {
+  if (node == NULL) return;
+  
+  Item key = node->data; 
+  __bst_decreasing_order(node->right, to_string);
+  (*to_string)(key);
+  __bst_decreasing_order(node->left, to_string);
+}
+
 int bst_init(bs_tree_t *tree) {
   tree->root = NULL;
   return 0;
@@ -123,6 +132,9 @@ int bst_print(bs_tree_t tree, void (*to_string)(Item), Order_print_t order_print
     case in_order:
       __bst_in_order(tree.root, to_string);
       break;
+    case decreasing_order:
+      __bst_decreasing_order(tree.root, to_string);
+      break;
     default:
       return -1;
   }
@@ -167,4 +179,29 @@ void bst_bfs(Node node, void (*to_string)(Item)) {
     aux_node = dequeue(&queue);
     
   }
+}
+
+int greatest_value(Node node, Item *item) {
+  Node current = node;
+
+  while(current->right != NULL) current = current->right;
+
+  *item = current->data;
+
+  return 1;
+}
+
+int lowest_value(Node node, Item *item) {
+  Node current = node;
+
+  while(current->left != NULL) current = current->left;
+
+  *item = current->data;
+
+  return 1;
+}
+
+int count_nodes(Node node) {
+  if (node == NULL) return 0;
+  return 1 + count_nodes(node->right) + count_nodes(node->left);
 }
