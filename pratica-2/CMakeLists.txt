@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 2.6)
+project(BS_TREE)
+set(CMAKE_BUILD_TYPE Debug)
+set(SOURCE_FILES ./lib/aluno.c ./lib/aluno.h ./lib/node.c ./lib/node.h ./lib/queue.c ./lib/queue.h ./lib/bs-tree.c ./lib/bs-tree.h main.c)
+add_executable(BS_TREE ${SOURCE_FILES})
