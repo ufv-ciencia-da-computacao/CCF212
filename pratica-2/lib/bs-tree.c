@@ -205,3 +205,25 @@ int count_nodes(Node node) {
   if (node == NULL) return 0;
   return 1 + count_nodes(node->right) + count_nodes(node->left);
 }
+
+int count_average_students(Node node, int average) {
+  if (node==NULL) return 0;
+
+  if (node->data.nota >= average) 
+    return 1+count_nodes(node->right)+count_average_students(node->left, average);
+
+  return count_average_students(node->right, average);
+}
+
+void bst_to_vector(Node node, Item *vector, int i) {
+  if (node == NULL) return; 
+
+  bst_to_vector(node->right, vector, i);
+  vector[i++] = node->data;
+  bst_to_vector(node->left, vector, i);
+}
+
+void get_greatest_group_grade(Node node, int num_group) {
+  vector = (aluno_t *) malloc (count_nodes(node) * sizeof(aluno_t));
+  return;
+}

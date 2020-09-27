@@ -24,4 +24,5 @@ void bst_bfs(Node node, void (*to_string)(Item));
 int greatest_value(Node node, Item *item);
 int lowest_value(Node node, Item *item);
 int count_nodes(Node node);
+int count_average_students(Node node, int average); 
 #endif
