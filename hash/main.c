@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "./open-addressing/lib/node.h"
+#include "./close-addressing/lib/node.h"
 //./open-addressing/lib/node.c ./open-addressing/lib/node.h 
 
 int main() {

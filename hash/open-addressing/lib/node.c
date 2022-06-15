@@ -23,7 +23,6 @@ int dictionary_search(Dictionary* dict, char* item) {
     int h = hash(item);
     for (int i=0; i<M; i++) {
         int h_lin = hashing_linear(h, i);
-        printf("%d\n", h_lin);
         if (dict[h_lin]->word==NULL) {
             return 0;
         } else if (strcmp(dict[h_lin]->word, item)==0) {

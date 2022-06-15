@@ -59,21 +59,6 @@ int bst_insert(Node *node, Item item, int (*compare_data)(Item, Item)) {
   return 0;
 }
 
-void bst_predecessor(Node q, Node *r) {
-  Node aux;
-  
-  if ((*r)->right != NULL) {
-    bst_predecessor(q, &((*r)->right));
-    return;
-  }
-
-  q->data = (*r)->data;
-  aux = *r;
-  *r = (*r)->left;
-
-  free(aux);
-}
-
 int bst_search(Node *node, Item *key, int (*compare_data)(Item, Item)) {
   if(node == NULL) {
     return 0;
@@ -91,6 +76,21 @@ int bst_search(Node *node, Item *key, int (*compare_data)(Item, Item)) {
   }
   
   return 0;
+}
+
+void bst_predecessor(Node q, Node *r) {
+  Node aux;
+  
+  if ((*r)->right != NULL) {
+    bst_predecessor(q, &((*r)->right));
+    return;
+  }
+
+  q->data = (*r)->data;
+  aux = *r;
+  *r = (*r)->left;
+
+  free(aux);
 }
 
 int bst_remove(Node *node, Item key, int(*compare_data)(Item, Item)) {

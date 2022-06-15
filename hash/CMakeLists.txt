@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.6)
 project(hash)
 set(CMAKE_BUILD_TYPE Debug)
-set(SOURCE_FILES ./open-addressing/lib/node.c ./open-addressing/lib/node.h main.c)
+set(SOURCE_FILES ./close-addressing/lib/node.c ./close-addressing/lib/node.h main.c)
 add_executable(hash ${SOURCE_FILES})

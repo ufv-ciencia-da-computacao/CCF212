@@ -1,32 +1,29 @@
 #include "node.h"
-
-// static Node node_init(keys item) {
-//     Node node;
-//     (node) = (Node) malloc(sizeof(struct node_t)); 
-//     item_init(&((node)->item), item);
-//     (node)->next = NULL;
-
-//     return node;
-// }
+#include <stdio.h>
 
 void linked_list_init(List *list) {
-    list->head = (Node) malloc(sizeof(struct node_t));
-    list->tail = list->head;
-    list->head->next=NULL;
+    list->head = NULL;
+    list->tail = NULL;
 }
 
 void linked_list_insert(List *list, char *item) {
-    list->tail = (Node) malloc(sizeof(struct node_t));
-    list->tail = list->tail->next;
-    puts(list->tail->item);
-    strcpy(list->tail->item, item);
-    list->tail->next = NULL;
+    Node node = (Node) malloc(sizeof(struct node_t));
+    strcpy(node->item, item);
+    node->next = NULL;
+
+    if (list->head == NULL) {
+        list->head = node;
+        list->tail = node;
+    } else {
+        list->tail->next = node;
+        list->tail = list->tail->next;
+    }
 }
 
 int hash(keys item) {
     int h=0, a=31415, b=27183;
     for (int i = 0; item[i] != '\0'; i++, a=a*b % (M-1)) {
-        h=(a*h + item[i]) % M;
+        h = (a*h + item[i]) % M;
     }
 
     return h;
@@ -41,14 +38,13 @@ void dictionary_init(Dictionary* dict) {
 int dictionary_search(Dictionary* dict, keys item) {
     int h = hash(item);
 
-    if (dict[h]->head->next == NULL) {
+    if (dict[h]->head == NULL) {
         return 0;
     } 
-
     Node aux = dict[h]->head;
 
-    while (aux->next != NULL) {
-        puts(aux->item);
+    while (aux != NULL) {
+
         if (strcmp(aux->item, item) == 0) return 1;
         aux = aux->next;
     }
